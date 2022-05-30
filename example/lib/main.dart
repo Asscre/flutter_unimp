@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_unimp/flutter_unimp.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,20 +14,26 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final List<BTNWidgetClass> _btnList = [
-    BTNWidgetClass(
-        title: 'uView',
-        subtitle: 'uView UI，是 uni-app 生态优秀的 UI 框架，全面的组件和便捷的工具会让您信手拈来，如鱼得水',
-        func: () {}),
-    BTNWidgetClass(
-        title: 'hello-uniapp',
-        subtitle: '演示 uni-app 框架的组件、接口、模板等',
-        func: () {}),
-  ];
+  late List<BTNWidgetClass> _btnList;
+
+  late FlutterUnimp _flutterUnimp;
 
   @override
   void initState() {
     super.initState();
+    _flutterUnimp = FlutterUnimp();
+    _btnList = [
+      BTNWidgetClass(
+        title: 'uView',
+        subtitle: 'uView UI，是 uni-app 生态优秀的 UI 框架，全面的组件和便捷的工具会让您信手拈来，如鱼得水',
+        func: () => openApp('__UNI__F87B0CE'),
+      ),
+      BTNWidgetClass(
+        title: 'hello-uniapp',
+        subtitle: '演示 uni-app 框架的组件、接口、模板等',
+        func: () => openApp('__UNI__3BC70CE'),
+      ),
+    ];
   }
 
   // #2A8C82
@@ -111,6 +119,17 @@ class _MyAppState extends State<MyApp> {
         ],
       ),
     );
+  }
+
+  void openApp(String appID) async {
+    try {
+      // 通过渠道，调用原生代码代码的方法
+      final future = await _flutterUnimp.openMinimp(appID);
+      // 打印执行的结果
+      debugPrint(future.toString());
+    } on PlatformException catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }
 

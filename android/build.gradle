@@ -30,6 +30,46 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 26
+        ndk {
+            abiFilters 'x86', 'armeabi-v7a', "arm64-v8a" // 不支持armeabi
+        }
     }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard.cfg'
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    aaptOptions {
+        additionalParameters '--auto-add-overlay'
+        //noCompress 'foo', 'bar'
+        ignoreAssetsPattern "!.svn:!.git:.*:!CVS:!thumbs.db:!picasa.ini:!*.scc:*~"
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // libs UniMPSDK
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.aar'], dir: 'libs')
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.alibaba:fastjson:1.1.46.android'
+    implementation 'com.facebook.fresco:fresco:1.13.0'
+    implementation 'com.facebook.fresco:animated-gif:1.13.0'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'androidx.databinding:compiler:3.2.0-alpha11'
 }
